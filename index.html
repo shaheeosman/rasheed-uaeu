@@ -4,37 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rasheed: COE Academic Assistant</title>
-    <!-- Tailwind CSS for Styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React and Babel for Browser-side compilation -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        /* Custom scrollbar for checklist */
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .checklist-scroll::-webkit-scrollbar { width: 6px; }
-        .checklist-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .checklist-scroll::-webkit-scrollbar-thumb { background: #D71920; border-radius: 10px; }
+        [v-cloak] { display: none; }
     </style>
 </head>
-<body class="bg-slate-50">
-    <div id="root"></div>
+<body>
+    <div id="root">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="text-center">
+                <div class="w-12 h-12 border-4 border-[#D71920] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Initializing Rasheed...</p>
+            </div>
+        </div>
+    </div>
 
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // --- DATA STRUCTURE ---
         const COE_DATA = {
             majors: [
                 {
                     id: "ece",
                     name: "Early Childhood Education",
-                    cohorts: ["2020-2021", "2022-2023", "2025-2026"],
+                    cohorts: ["2025-2026"],
                     plans: {
                         "2025-2026": [
                             { term: 1, courses: [
@@ -48,18 +49,6 @@
                                 { code: "CURR101", name: "Technology in Education", ch: 3, type: "Core" },
                                 { code: "FOED102", name: "Professional Ethics", ch: 3, type: "Core" },
                                 { code: "CURR233", name: "Classroom Management", ch: 3, type: "Core" }
-                            ]},
-                            { term: 3, courses: [
-                                { code: "CURR103", name: "Child Development & Learning", ch: 3, type: "Major" },
-                                { code: "CURR212", name: "Language Development & Literacy", ch: 3, type: "Major" },
-                                { code: "CURR312", name: "Religious & Social Concepts in ECE", ch: 3, type: "Support" },
-                                { code: "ARB210", name: "Arabic Phonetics", ch: 3, type: "Support" }
-                            ]},
-                            { term: 4, courses: [
-                                { code: "CURR211", name: "Planning & Implementation of ECE", ch: 3, type: "Major" },
-                                { code: "CURR320", name: "Math Education for Young Child", ch: 3, type: "Major" },
-                                { code: "CURR311", name: "Creative Arts for Young Children", ch: 3, type: "Major" },
-                                { code: "CURR114", name: "Recitation & Cantillation", ch: 3, type: "Support" }
                             ]}
                         ]
                     }
@@ -67,37 +56,12 @@
                 {
                     id: "hpe",
                     name: "Health and Physical Education",
-                    cohorts: ["2020-2021", "2025-2026"],
+                    cohorts: ["2025-2026"],
                     plans: {
                         "2025-2026": [
                             { term: 1, courses: [
                                 { code: "GEEM110", name: "Emirati Studies", ch: 3, type: "GenEd" },
-                                { code: "GEAE101", name: "Academic English", ch: 3, type: "GenEd" },
-                                { code: "GEIT113", name: "Intro to AI", ch: 3, type: "GenEd" }
-                            ]},
-                            { term: 2, courses: [
-                                { code: "CURR101", name: "Educational Tech", ch: 3, type: "Prof" },
-                                { code: "FOED102", name: "Professional Ethics", ch: 3, type: "Prof" },
-                                { code: "PHED205", name: "Adapted PE", ch: 3, type: "Prof" },
-                                { code: "PHED208", name: "Motor Learning", ch: 3, type: "Major" }
-                            ]}
-                        ]
-                    }
-                },
-                {
-                    id: "sped",
-                    name: "Special Education",
-                    cohorts: ["Mild/Mod Disabilities", "Gifted and Talented", "Sensory Impairments", "Severe Disabilities"],
-                    plans: {
-                        "Mild/Mod Disabilities": [
-                            { term: 1, courses: [
-                                { code: "GEAE101", name: "English for Humanities", ch: 3, type: "GenEd" },
-                                { code: "GEIT113", name: "Intro to AI", ch: 3, type: "GenEd" },
-                                { code: "GEEM110", name: "Emirati Studies", ch: 3, type: "GenEd" }
-                            ]},
-                            { term: 2, courses: [
-                                { code: "SPED101", name: "Exceptional Children", ch: 3, type: "Core" },
-                                { code: "CURR101", name: "Educational Tech", ch: 3, type: "Core" }
+                                { code: "GEAE101", name: "Academic English", ch: 3, type: "GenEd" }
                             ]}
                         ]
                     }
@@ -113,7 +77,6 @@
             const [showNext, setShowNext] = useState(false);
             const [showLong, setShowLong] = useState(false);
 
-            // Re-render icons whenever UI state changes
             useEffect(() => {
                 if (window.lucide) {
                     window.lucide.createIcons();
@@ -122,34 +85,29 @@
 
             const plan = useMemo(() => {
                 if (!major || !cohort) return [];
-                return major.plans[cohort] || major.plans[Object.keys(major.plans)[0]] || [];
+                return major.plans[cohort] || [];
             }, [major, cohort]);
 
             const allCourses = useMemo(() => plan.flatMap(p => p.courses), [plan]);
-            const earnedCH = useMemo(() => allCourses.filter(c => completed[c.code]).reduce((sum, c) => sum + (c.ch || 3), 0), [allCourses, completed]);
+            const earnedCH = useMemo(() => allCourses.filter(c => completed[c.code]).reduce((sum, c) => sum + 3, 0), [allCourses, completed]);
 
             const registrationWindows = useMemo(() => {
                 let summer = "April 09, 2026";
                 let fall = "April 20 - 21, 2026";
                 if (earnedCH >= 99) summer = "April 06, 2026";
                 else if (earnedCH >= 81) summer = "April 07, 2026";
-                else if (earnedCH >= 63) summer = "April 08, 2026";
-
                 if (earnedCH >= 84) fall = "April 13 - 14, 2026";
                 else if (earnedCH >= 45) fall = "April 14 - 15, 2026";
-                else if (earnedCH >= 12) fall = "April 15 - 16, 2026";
                 return { summer, fall };
             }, [earnedCH]);
-
-            const toggleCourse = (code) => setCompleted(prev => ({ ...prev, [code]: !prev[code] }));
 
             const remainingCourses = allCourses.filter(c => !completed[c.code]);
 
             return (
-                <div className="min-h-screen pb-20">
+                <div className="min-h-screen">
                     <header className="bg-[#D71920] text-white p-6 shadow-lg sticky top-0 z-50 flex justify-between items-center">
                         <div className="flex items-center gap-3">
-                            <i data-lucide="graduation-cap" class="w-8 h-8"></i>
+                            <i data-lucide="graduation-cap" className="w-8 h-8"></i>
                             <div>
                                 <h1 className="text-2xl font-black tracking-tight leading-none">Rasheed</h1>
                                 <p className="text-[10px] uppercase font-bold opacity-80 mt-1">COE Academic Assistant</p>
@@ -158,126 +116,100 @@
                     </header>
 
                     <main className="max-w-4xl mx-auto p-6 space-y-6">
-                        {/* WELCOMING MESSAGE */}
-                        <section className="bg-white rounded-3xl p-8 shadow-sm border-2 border-slate-100 animate-in fade-in slide-in-from-top-4 duration-700">
+                        <section className="bg-white rounded-3xl p-8 shadow-sm border-2 border-slate-100">
                             <div className="flex items-start gap-5">
                                 <div className="bg-[#D71920]/10 p-4 rounded-2xl shrink-0">
                                     <i data-lucide="sparkles" className="text-[#D71920] w-8 h-8"></i>
                                 </div>
                                 <div className="space-y-3">
                                     <h2 className="text-2xl font-black text-slate-900 tracking-tight">Welcome, Future Educator!</h2>
-                                    <p className="text-slate-600 leading-relaxed text-lg italic">
-                                        "I am Rasheed, your dedicated AI Academic Advisor here at the College of Education. 
-                                        My mission is to support your academic success by helping you visualize your degree path, 
-                                        track your progress, and optimize your upcoming registration cycles. Let us work together 
-                                        to ensure your journey toward graduation is structured and successful."
+                                    <p className="text-slate-600 leading-relaxed italic">
+                                        "I am Rasheed, your dedicated AI Academic Advisor. Let's optimize your path to graduation."
                                     </p>
-                                    <div className="pt-2">
-                                        <div className="text-sm font-bold text-[#D71920] uppercase tracking-widest flex items-center gap-2">
-                                            <i data-lucide="arrow-down" className="w-4 h-4"></i> To begin, please select your academic major below.
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </section>
 
-                        <div className="bg-white rounded-3xl p-6 shadow-sm border-2 border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase px-2">Major Selection</label>
-                                <select onChange={(e) => {
-                                    setMajor(COE_DATA.majors.find(x => x.id === e.target.value));
-                                    setCohort(""); setCompleted({});
-                                }} className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-[#D71920] transition-colors outline-none cursor-pointer">
-                                    <option value="">Select Major...</option>
-                                    {COE_DATA.majors.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
-                                </select>
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-[10px] font-black text-slate-400 uppercase px-2">Cohort / Plan</label>
-                                <select disabled={!major} onChange={(e) => setCohort(e.target.value)} value={cohort} className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-[#D71920] transition-colors outline-none cursor-pointer disabled:opacity-50">
-                                    <option value="">Select Cohort...</option>
-                                    {major?.cohorts.map(c => <option key={c} value={c}>{c}</option>)}
-                                </select>
-                            </div>
+                        <div className="bg-white rounded-3xl p-6 border-2 border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <select onChange={(e) => {
+                                setMajor(COE_DATA.majors.find(x => x.id === e.target.value));
+                                setCohort(""); setCompleted({});
+                            }} className="p-4 bg-slate-50 border-2 rounded-2xl font-bold outline-none">
+                                <option value="">Select Major...</option>
+                                {COE_DATA.majors.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+                            </select>
+                            <select disabled={!major} onChange={(e) => setCohort(e.target.value)} value={cohort} className="p-4 bg-slate-50 border-2 rounded-2xl font-bold outline-none disabled:opacity-50">
+                                <option value="">Select Cohort...</option>
+                                {major?.cohorts.map(c => <option key={c} value={c}>{c}</option>)}
+                            </select>
                         </div>
 
                         {major && cohort && (
-                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="space-y-6">
                                 <section className="bg-white rounded-3xl border-2 border-slate-100 overflow-hidden shadow-sm">
                                     <div className="bg-slate-50 p-6 border-b flex justify-between items-center">
-                                        <div>
-                                            <h3 className="font-black text-slate-800">Pass History</h3>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Check courses you have already completed</p>
-                                        </div>
-                                        <div className="bg-[#D71920] text-white px-5 py-2 rounded-2xl text-sm font-black shadow-lg shadow-red-100">{earnedCH} Credits</div>
+                                        <h3 className="font-black text-slate-800">Check Progress</h3>
+                                        <div className="bg-[#D71920] text-white px-5 py-2 rounded-2xl text-sm font-black">{earnedCH} Credits</div>
                                     </div>
                                     <div className="p-4 max-h-[300px] overflow-y-auto space-y-2 checklist-scroll">
                                         {allCourses.map(c => (
-                                            <div key={c.code} onClick={() => toggleCourse(c.code)} className={`p-4 rounded-xl cursor-pointer border-2 flex items-center gap-4 transition-all ${completed[c.code] ? 'bg-green-50 border-green-200' : 'bg-white border-slate-50 hover:border-slate-200 shadow-sm'}`}>
-                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${completed[c.code] ? 'bg-green-500 border-green-500 text-white' : 'border-slate-200 text-transparent'}`}>
-                                                    <i data-lucide="check" className="w-4 h-4"></i>
-                                                </div>
+                                            <div key={c.code} onClick={() => setCompleted(prev => ({...prev, [c.code]: !prev[c.code]}))} className={`p-4 rounded-xl cursor-pointer border-2 flex items-center gap-4 ${completed[c.code] ? 'bg-green-50 border-green-200' : 'bg-white border-slate-50'}`}>
+                                                <i data-lucide="check" className={completed[c.code] ? 'text-green-500' : 'text-transparent'}></i>
                                                 <div className="flex-1">
-                                                    <span className="text-sm font-bold block leading-tight">{c.name}</span>
-                                                    <span className="text-[10px] font-black text-slate-400 uppercase">{c.code} • {c.ch} CH</span>
+                                                    <span className="text-sm font-bold block">{c.name}</span>
+                                                    <span className="text-[10px] font-black text-slate-400 uppercase">{c.code}</span>
                                                 </div>
-                                                <span className="text-[9px] font-black bg-slate-100 px-2 py-0.5 rounded border text-slate-500 uppercase">{c.type}</span>
                                             </div>
                                         ))}
                                     </div>
                                 </section>
 
-                                <div className="space-y-4">
-                                    {/* SUMMER */}
-                                    <div className="space-y-2">
-                                        <button onClick={() => setShowSummer(!showSummer)} className="w-full p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-orange-400 transition-colors font-black text-slate-700 flex justify-between items-center group shadow-sm">
-                                            <div className="flex items-center gap-3">
-                                                <div className="bg-orange-50 p-2 rounded-lg"><i data-lucide="sun" className="text-orange-400 w-5 h-5"></i></div>
-                                                <span className="group-hover:text-orange-600">Summer 2026 Suggestions</span>
-                                            </div>
-                                            <i data-lucide="chevron-down" className={`text-slate-300 transition-transform ${showSummer ? 'rotate-180 text-orange-400' : ''}`}></i>
-                                        </button>
-                                        {showSummer && (
-                                            <div className="p-6 bg-white rounded-3xl border-2 border-orange-100 animate-in zoom-in-95 duration-200 shadow-inner">
-                                                <div className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-3">Priority Summer Units:</div>
-                                                {remainingCourses.length > 0 ? (
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                        {remainingCourses.slice(0, 2).map(c => (
-                                                            <div key={c.code} className="bg-orange-50/50 p-3 rounded-xl border border-orange-100 flex items-center gap-3">
-                                                                <div className="w-2 h-2 rounded-full bg-orange-400"></div>
-                                                                <span className="text-xs font-bold text-slate-700">{c.code} - {c.name}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                ) : <div className="text-xs font-bold text-slate-400 italic">No remaining courses for this sequence.</div>}
-                                            </div>
-                                        )}
+                                <button onClick={() => setShowSummer(!showSummer)} className="w-full p-5 bg-white rounded-2xl border-2 font-black text-slate-700 flex justify-between items-center">
+                                    <span>Summer 2026 Suggestions</span> <i data-lucide="sun" className="text-orange-400"></i>
+                                </button>
+                                {showSummer && (
+                                    <div className="p-6 bg-white rounded-3xl border-2 border-orange-100 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {remainingCourses.slice(0, 2).map(c => (
+                                            <div key={c.code} className="bg-orange-50/50 p-3 rounded-xl border text-xs font-bold text-slate-700 uppercase">• {c.name}</div>
+                                        ))}
                                     </div>
+                                )}
 
-                                    {/* FALL */}
-                                    <div className="space-y-2">
-                                        <button onClick={() => setShowNext(!showNext)} className="w-full p-5 bg-white rounded-2xl border-2 border-slate-100 hover:border-blue-400 transition-colors font-black text-slate-700 flex justify-between items-center group shadow-sm">
-                                            <div className="flex items-center gap-3">
-                                                <div className="bg-blue-50 p-2 rounded-lg"><i data-lucide="calendar" className="text-blue-400 w-5 h-5"></i></div>
-                                                <span className="group-hover:text-blue-600">Next Term Plan (Fall 2026)</span>
-                                            </div>
-                                            <i data-lucide="chevron-down" className={`text-slate-300 transition-transform ${showNext ? 'rotate-180 text-blue-400' : ''}`}></i>
-                                        </button>
-                                        {showNext && (
-                                            <div className="p-6 bg-white rounded-3xl border-2 border-blue-100 animate-in zoom-in-95 duration-200 shadow-inner">
-                                                <div className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3">Suggested Fall Load (12-15 CH):</div>
-                                                <div className="space-y-2">
-                                                    {remainingCourses.slice(0, 5).map(c => (
-                                                        <div key={c.code} className="bg-blue-50/50 p-4 rounded-xl border border-blue-100 flex justify-between items-center">
-                                                            <span className="text-xs font-bold text-slate-700">{c.name}</span>
-                                                            <span className="text-[10px] font-black text-blue-400 uppercase bg-white border px-2 py-1 rounded shadow-sm">{c.code}</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
+                                <button onClick={() => setShowNext(!showNext)} className="w-full p-5 bg-white rounded-2xl border-2 font-black text-slate-700 flex justify-between items-center">
+                                    <span>Next Term Plan (Fall 2026)</span> <i data-lucide="calendar" className="text-blue-400"></i>
+                                </button>
+                                {showNext && (
+                                    <div className="p-6 bg-white rounded-3xl border-2 border-blue-100 space-y-2">
+                                        {remainingCourses.slice(0, 5).map(c => (
+                                            <div key={c.code} className="p-4 bg-blue-50/50 rounded-xl flex justify-between text-xs font-bold"><span>{c.name}</span><span className="text-blue-400">{c.code}</span></div>
+                                        ))}
                                     </div>
+                                )}
 
-                                    {/* LONG TERM */}
-                                    <div className="space-y-2">
-                                        <button onClick={() => setShowLong(!showLong)} className="w-
+                                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white space-y-6 shadow-xl relative overflow-hidden border-4 border-white">
+                                    <h3 className="text-xl font-black text-[#D71920] flex items-center gap-2">
+                                        <i data-lucide="clock"></i> Registration Window
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="p-6 bg-white/5 rounded-3xl border border-white/10">
+                                            <p className="text-[10px] uppercase font-black tracking-widest text-orange-400 mb-2">Summer 2026</p>
+                                            <p className="text-3xl font-black text-white">{registrationWindows.summer}</p>
+                                        </div>
+                                        <div className="p-6 bg-white/5 rounded-3xl border border-white/10">
+                                            <p className="text-[10px] uppercase font-black tracking-widest text-blue-400 mb-2">Fall 2026</p>
+                                            <p className="text-3xl font-black text-white">{registrationWindows.fall}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
